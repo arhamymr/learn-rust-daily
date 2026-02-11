@@ -1,10 +1,9 @@
-fn add_with_10(x: u32) -> u32 {
+pub fn add_with_10(x: u32) -> u32 {
     let result = |num| num + x;
-    return result(10)
+    result(10)
 }
 
-
-#[cfg(test)]
+#[cfg(test)] 
 mod tests {
     use super::*;
 

@@ -1,3 +1,3 @@
-pub mod closure;
+mod closure;
 
-use closure::*;
+pub use closure::{add_with_10};
