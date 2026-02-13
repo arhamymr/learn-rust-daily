@@ -2,10 +2,11 @@ mod basic;
 mod cryptography;
 mod networking;
 
+
 #[allow(unused_imports)]
 fn main() {
     println!("Hello, world!");
-    let result = basic::add_with_10(5);
+    let result = basic::closure::add_with_10(5);
     println!("Result: {}", result);
 
     let value = "example";
@@ -17,4 +18,11 @@ fn main() {
 
     networking::http();
     println!("HTTP module executed successfully.");
+
+    basic::primitives::print_example_literals_and_operators();
+    basic::primitives::print_example_tuples_and_arrays();
+    basic::primitives::print_example_array_slice();
+    let array_slice = basic::primitives::example_array_slice();
+    println!("Returned array slice: {:?}", array_slice);
+    
 }

@@ -1,3 +1,2 @@
-mod closure;
-
-pub use closure::{add_with_10};
+pub mod closure;
+pub mod primitives;
