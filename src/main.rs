@@ -24,5 +24,8 @@ fn main() {
     basic::primitives::print_example_array_slice();
     let array_slice = basic::primitives::example_array_slice();
     println!("Returned array slice: {:?}", array_slice);
+
+
+    basic::control_flow::nested_loops();
     
 }

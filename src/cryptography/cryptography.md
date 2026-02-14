@@ -10,10 +10,94 @@ This document is a **complete learning + implementation roadmap** to master cryp
 ## Phase 0 — Cryptography Mindset
 
 ### Core Security Goals
+
 - Confidentiality
+  - What it is: Preventing unauthorized access to data, both at rest and in transit. Only intended parties should learn the plaintext or derive sensitive information from it.
+  - Typical threats:
+    - Passive eavesdropping on networks (sniffing, on‑path attackers before TLS).
+    - Data exfiltration from storage (stolen disks, leaked backups, misconfigured buckets).
+    - Inference via metadata (message length, timing, access patterns).
+  - How to achieve:
+    - Use authenticated encryption (AEAD) for data and messages: AES‑GCM or ChaCha20‑Poly1305.
+    - Use TLS for transport security; prefer modern cipher suites and enforce certificate validation.
+    - Apply access control and least privilege; encrypt only sensitive fields when partial encryption suffices.
+  - Rust patterns:
+    - Use audited crates (aes-gcm, chacha20poly1305, rustls).
+    - Use strong randomness for keys and nonces (rand with OS RNG).
+    - Treat secrets as sensitive memory; wipe when done (secrecy, zeroize).
+  - Pitfalls:
+    - Reusing nonces/IVs with stream/AEAD ciphers.
+    - Rolling your own padding, mode, or RNG.
+    - Confusing encryption with hashing (never “encrypt” passwords).
+  - Checklist:
+    - AEAD chosen; unique nonce policy documented and enforced.
+    - Keys generated from sufficient entropy and stored securely.
+    - TLS correctly configured and verified on all links.
+
 - Integrity
+  - What it is: Ensuring data has not been altered (accidentally or maliciously) since creation or transmission.
+  - Typical threats:
+    - Tampering with messages or files in transit/storage.
+    - Bit‑flips or partial overwrites in unreliable channels.
+  - How to achieve:
+    - Use MACs (e.g., HMAC) for messages when you share a secret key.
+    - Prefer AEAD so confidentiality and integrity are coupled.
+    - For files/artifacts distributed broadly, use digital signatures.
+  - Rust patterns:
+    - Use hmac with sha2 for keyed integrity; verify before use.
+    - Prefer AEAD for application messages; reject on tag failure.
+  - Pitfalls:
+    - Using a bare hash (e.g., SHA‑256 alone) to “ensure integrity”.
+    - Ignoring verification return values or truncating tags.
+    - Length‑extension issues when misusing Merkle–Damgård hashes.
+  - Checklist:
+    - Every message/file has a MAC or signature.
+    - Verification is constant‑time and fail‑closed.
+    - Tags/signatures are stored/transmitted intact and compared fully.
+
 - Authentication
+  - What it is: Proving identity (entity authentication) and/or data origin (that a message really came from who it claims).
+  - Typical threats:
+    - Credential theft or replay; token forgery; service impersonation.
+    - Confusing “encrypted” with “authenticated”.
+  - How to achieve:
+    - Users/services: password hashing with Argon2, multi‑factor, or mutual TLS.
+    - Data origin: MACs with shared secrets, or digital signatures with public keys.
+    - Protocols: challenge‑response with nonces/timestamps to prevent replay.
+  - Rust patterns:
+    - Passwords: store Argon2 hashes with unique salts; constant‑time comparisons.
+    - Services: rustls for TLS; pin or properly validate certificates where appropriate.
+    - Messages: MAC with HMAC for shared‑secret peers; signatures for third‑party verifiability.
+  - Pitfalls:
+    - Storing plaintext or fast hashes (MD5/SHA‑1/SHA‑256 without KDF).
+    - Using encryption as “proof of identity”.
+    - Omitting nonces/timestamps, enabling replay.
+  - Checklist:
+    - Strong password KDF parameters set and tested.
+    - Mutual authentication where needed (client and server).
+    - Nonces/timestamps validated; anti‑replay in place.
+
 - Non-repudiation
+  - What it is: Preventing a sender from plausibly denying having performed an action (e.g., sending a message or approving a transaction).
+  - Typical threats:
+    - Shared‑key systems where any party could have produced the MAC.
+    - Missing audit trails or weak time‑stamping.
+  - How to achieve:
+    - Digital signatures with unique private keys (e.g., Ed25519).
+    - Append‑only, verifiable logs with timestamps and hash chains.
+    - Clear key ownership, issuance, and revocation procedures.
+  - Rust patterns:
+    - Use ed25519‑dalek for signatures; distribute and pin public keys.
+    - Sign structured, canonicalized data with domain separation (context strings) to avoid ambiguity.
+    - Log signature digests and timestamps; protect logs against tampering.
+  - Pitfalls:
+    - Using HMAC for non‑repudiation (any holder can forge).
+    - Poor key management (lost/compromised keys invalidate claims).
+    - Ambiguous data formats (different byte representations complicate verification).
+  - Checklist:
+    - Actions/events are signed with a unique private key.
+    - Public keys are discoverable and bound to identities.
+    - Audit logs are integrity‑protected and time‑anchored.
 
 ### Non‑negotiable Rules
 - ❌ Do not roll your own crypto
