@@ -29,6 +29,7 @@ pub fn nested_loops() {
             break;
         }
 
+        
         println!("{} outer loop iteration: {}", global_counter, count);
         global_counter += 1;
 

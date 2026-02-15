@@ -4,6 +4,7 @@ mod networking;
 
 
 #[allow(unused_imports)]
+#[allow(unused)]
 fn main() {
     println!("Hello, world!");
     let result = basic::closure::add_with_10(5);
