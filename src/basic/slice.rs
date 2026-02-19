@@ -1,13 +1,4 @@
-fn first_word(s: &String) -> &str {
-    let bytes = s.as_bytes();
+fn first_word(){
+    println!("println");
 
-    for (i, &item) in bytes.iter().enumerate() {
-        if (item == b' ') {
-            return &s[0..i];
-        }
-    }
-
-    return &s[..];
 }
-
-//  i continue here later 

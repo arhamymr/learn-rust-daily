@@ -28,5 +28,8 @@ fn main() {
 
 
     basic::control_flow::nested_loops();
+
+    // impls
+    basic::impls::try_simple_impl();
     
 }
