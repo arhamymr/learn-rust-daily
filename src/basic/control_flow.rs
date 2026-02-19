@@ -1,3 +1,4 @@
+#[allow(unused)]
 fn control_flow_example(x: i32) -> String {
     let number = x;
 
@@ -8,6 +9,7 @@ fn control_flow_example(x: i32) -> String {
     }
 }
 
+#[allow(unused)]
 fn repetion_with_loop() -> String {
     let mut counter = 0;
     let result = loop {
@@ -29,13 +31,10 @@ pub fn nested_loops() {
             break;
         }
 
-        
         println!("{} outer loop iteration: {}", global_counter, count);
         global_counter += 1;
 
         let mut inner_count = 1;
-
-       
 
         'loop2: loop {
             println!("{} Inner Loop iteration: {}", global_counter, count);

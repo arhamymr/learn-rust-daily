@@ -14,7 +14,7 @@ impl User {
         println!("Show data, name {}, age {}", self.name, self.age);
     }
 
-    fn birtday(&mut self) -> u8 {
+    fn birthday(&mut self) -> u8 {
         self.age += 1;
         self.age
     }
@@ -29,7 +29,7 @@ pub fn try_simple_impl() {
 
     user.greet();
     user.show();
-    user.birtday();
+    user.birthday();
 
     // after birtday
     user.show();
@@ -48,6 +48,6 @@ mod test{
             age: 30,
         };
 
-        assert_eq!(user.birtday(), 31);
+        assert_eq!(user.birthday(), 31);
     }
 }
